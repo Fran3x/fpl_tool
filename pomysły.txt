@@ -1,0 +1,21 @@
+dark/light mode wraz ze zmianą kolorystyki
+loading screen https://www.youtube.com/watch?v=Ap865V3sAdw
+zmiana koloru po wcisnieciu i czcionki po najechaniu
+all data na podstawie pliku fpla
+wyczyscic kropke z loga arsenalu
+zapis difficulties do pliku
+odleglosci leveshteina do szukania piłkarzy mimo błędu
+desktopowa ikonka
+background image rozjaśnia/zaciemniać przezroczystością w gimpie i zmianą koloru podkładu (biały/czarny)
+logo premier league w lewym górnym
+ikonki z zakładki
+TAB: rozpiska fixturów zawodników wraz z możliwościa dodania zawodników koncepcyjnych
+animacje przy zmianach scen (np. slidingi elementów)
+opoznienie includów, aby aplikacja ładowała się na loadins screenie, a nie przed nim
+przycisk do aktualizacji danych
+zaokreglenia prostokatow
+team difficulty słownikiem
+użycie globals()
+brak mozliwosci zmiany rozmiaru okna albo handling zmiany
+atrakcyjny pasek windowsowy
+lewa strona przycisku - zmniejsz, prawa- zwieksz
