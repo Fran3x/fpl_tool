@@ -19,3 +19,16 @@ użycie globals()
 brak mozliwosci zmiany rozmiaru okna albo handling zmiany
 atrakcyjny pasek windowsowy
 lewa strona przycisku - zmniejsz, prawa- zwieksz
+Fixture jako osobna klasa
+leicester i leeds zamienione?
+klasa do odczytu plików
+automatyczne tworzenie teamów i danych o nich
+wiecej dziedziczenia?
+diagram uml aby moc sie połapac w klasach i co po czym dziedziczy
+ładować stronę od nowa za każdym razem (brak zmiany trudności po zmianie teamu)
+prywatyzacja
+co gdy plik team_difficulty jest pusty?
+handling errorów typu obiektu nie znaleziono
+czy plik json numer_kolejki/event/picks jest generowany od razu?
+szerokosc i wysokosc okna na sztywno
+bez lewego paska i bez zaokraglen po lewej

@@ -71,7 +71,7 @@ QWidget {
       <x>239</x>
       <y>0</y>
       <width>761</width>
-      <height>661</height>
+      <height>681</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -81,14 +81,20 @@ QWidget {
      <property name="styleSheet">
       <string notr="true"/>
      </property>
-     <widget class="QTableWidget" name="tableWidget">
+     <widget class="QTableWidget" name="my_players_table">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>100</y>
-        <width>631</width>
-        <height>481</height>
+        <x>30</x>
+        <y>110</y>
+        <width>641</width>
+        <height>491</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white</string>
+      </property>
+      <property name="columnCount">
+       <number>1</number>
       </property>
       <row>
        <property name="text">
@@ -167,34 +173,22 @@ QWidget {
       </row>
       <column>
        <property name="text">
-        <string>player_name</string>
+        <string>Player Name</string>
        </property>
       </column>
-      <column>
-       <property name="text">
-        <string>GW1</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>GW2</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>GW3</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>GW4</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>GW5</string>
-       </property>
-      </column>
+     </widget>
+     <widget class="QLineEdit" name="search_box">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>40</y>
+        <width>281</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: white</string>
+      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="team_difficulty_page">
@@ -829,11 +823,25 @@ QWidget {
      <pixmap>pics/logo_premier_league_small_black.png</pixmap>
     </property>
    </widget>
+   <widget class="QPushButton" name="Quit">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>300</y>
+      <width>181</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Quit</string>
+    </property>
+   </widget>
+   <zorder>Quit</zorder>
+   <zorder>label_22</zorder>
    <zorder>TeamDifficulty</zorder>
    <zorder>scenes</zorder>
    <zorder>Planner</zorder>
    <zorder>label_21</zorder>
-   <zorder>label_22</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
