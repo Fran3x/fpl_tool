@@ -4,14 +4,14 @@ zmiana koloru po wcisnieciu i czcionki po najechaniu
 all data na podstawie pliku fpla
 wyczyscic kropke z loga arsenalu
 zapis difficulties do pliku
-odleglosci leveshteina do szukania piłkarzy mimo błędu
+odleglosci levenshteina do szukania piłkarzy mimo błędu
 desktopowa ikonka
 background image rozjaśnia/zaciemniać przezroczystością w gimpie i zmianą koloru podkładu (biały/czarny)
 logo premier league w lewym górnym
 ikonki z zakładki
 TAB: rozpiska fixturów zawodników wraz z możliwościa dodania zawodników koncepcyjnych
 animacje przy zmianach scen (np. slidingi elementów)
-opoznienie includów, aby aplikacja ładowała się na loadins screenie, a nie przed nim
+opoznienie includów, aby aplikacja ładowała się na loading screenie, a nie przed nim
 przycisk do aktualizacji danych
 zaokreglenia prostokatow
 team difficulty słownikiem
@@ -32,3 +32,11 @@ handling errorów typu obiektu nie znaleziono
 czy plik json numer_kolejki/event/picks jest generowany od razu?
 szerokosc i wysokosc okna na sztywno
 bez lewego paska i bez zaokraglen po lewej
+sumować difficulty jak na footballfallout
+rozróżnienie na away i home
+pokolorować pozycję zawodnika
+osobny plik do configu (kolory, łatwiejsza zmiana dark/light mode, szerokości, wysokośći itp.)
+trackowanie double gameweeków
+zawsze pokazywanie nazwy teamu/zawodnika
+siedmiostopniowa skala trudności
+dodanie legendy pod trudnościami

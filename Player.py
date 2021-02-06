@@ -15,3 +15,6 @@ class Player:
 
     def getName(self):
         return self.name
+
+    def getPosition(self):
+        return self.position

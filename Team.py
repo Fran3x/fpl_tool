@@ -21,3 +21,6 @@ class Team:
 
     def getOpponentsOfTeam(self):
         return self.fixtures
+
+    def getId(self):
+        return self.id

@@ -6,7 +6,8 @@ import Team
 class TeamsDatabase:
     def __init__(self):
         self.teams = [ ]
-        self.fixtures_array = [[0 for x in range(38)] for y in range(20)]
+        # array structure - [team_id][gameweek][list of fixtures presented as [opponent_id, H/A]]
+        self.fixtures_array = [[[] for y in range(38)] for z in range(20)]
         self.getFixtures()
         self.updateDatabase()
 
@@ -19,8 +20,8 @@ class TeamsDatabase:
         self.teams.append(Team.Team(6, "Crystal Palace", "cry", self.fixtures_array[5]))
         self.teams.append(Team.Team(7, "Everton", "eve", self.fixtures_array[6]))
         self.teams.append(Team.Team(8, "Fulham", "ful", self.fixtures_array[7]))
-        self.teams.append(Team.Team(9, "Leeds", "lee", self.fixtures_array[8]))
-        self.teams.append(Team.Team(10, "Leicester", "lei", self.fixtures_array[9]))
+        self.teams.append(Team.Team(9, "Leicester", "lei", self.fixtures_array[8]))
+        self.teams.append(Team.Team(10, "Leeds", "lee", self.fixtures_array[9]))
         self.teams.append(Team.Team(11, "Liverpool", "liv", self.fixtures_array[10]))
         self.teams.append(Team.Team(12, "Manchester City", "mci", self.fixtures_array[11]))
         self.teams.append(Team.Team(13, "Manchester United", "mun", self.fixtures_array[12]))
@@ -41,8 +42,10 @@ class TeamsDatabase:
             team_a = int(fixture["team_a"])
             if fixture["event"]:
                 gameweek = int(fixture["event"])
-                self.fixtures_array[team_a - 1][gameweek - 1] = team_h
-                self.fixtures_array[team_h - 1][gameweek - 1] = team_a
+                team_h_fixture = [team_a, "H"]
+                team_a_fixture = [team_h, "A"]
+                self.fixtures_array[team_h - 1][gameweek - 1].append(team_h_fixture)
+                self.fixtures_array[team_a - 1][gameweek - 1].append(team_a_fixture)
 
 
     def getTeamByName(self, name):
@@ -69,5 +72,6 @@ class TeamsDatabase:
         for i in range (1, 21):
             # sets difficulty of given team
             self.getTeamById(i).setDifficulty(int(content[i - 1]))
-            #self.team_difficulty[i - 1] = int(content[i - 1])
-        #print(self.team_difficulty)
+
+    def getTeams(self):
+        return self.teams

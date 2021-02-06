@@ -83,13 +83,10 @@ class Tool:
             hour = int(date[11:13])
             minute = int(date[14:16])
             second = int(date[17:19])
-            #print(year, month, day, hour, minute ,second)
 
             if now > datetime(year, month, day, hour, minute ,second):
                 next_gameweek += 1
 
-
-            #print (data['events'][i]['deadline_time'], i, datetime.now())
         return next_gameweek
 
 

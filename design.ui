@@ -86,8 +86,8 @@ QWidget {
        <rect>
         <x>30</x>
         <y>110</y>
-        <width>641</width>
-        <height>491</height>
+        <width>628</width>
+        <height>492</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -776,7 +776,53 @@ QWidget {
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="page_5"/>
+    <widget class="QWidget" name="fixtures_page">
+     <widget class="QTableWidget" name="fixtures_table">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>20</y>
+        <width>624</width>
+        <height>648</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color:white</string>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <column>
+       <property name="text">
+        <string>Team name</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QTableWidget" name="frozen_fixtures">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>20</y>
+        <width>123</width>
+        <height>625</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-color: white</string>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="lineWidth">
+       <number>1</number>
+      </property>
+      <column>
+       <property name="text">
+        <string>Team name</string>
+       </property>
+      </column>
+     </widget>
+    </widget>
    </widget>
    <widget class="QLabel" name="label_21">
     <property name="geometry">
@@ -827,7 +873,7 @@ QWidget {
     <property name="geometry">
      <rect>
       <x>40</x>
-      <y>300</y>
+      <y>350</y>
       <width>181</width>
       <height>51</height>
      </rect>
@@ -836,6 +882,20 @@ QWidget {
      <string>Quit</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="Fixtures">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>300</y>
+      <width>181</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Fixtures</string>
+    </property>
+   </widget>
+   <zorder>Fixtures</zorder>
    <zorder>Quit</zorder>
    <zorder>label_22</zorder>
    <zorder>TeamDifficulty</zorder>
