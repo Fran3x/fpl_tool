@@ -1,6 +1,8 @@
 
 import design
 import tool
+import TableCell
+import Configuration
 
 import sys
 
@@ -8,11 +10,15 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.fpl_tool = tool.Tool()
+        self.config = Configuration.Configuration()
 
 
     def changeActivePage(self, page):
         self.scenes.setCurrentWidget(page)
-        print("H")
+
+        # difficulties might have been changed
+        self.updateMyPlayersTable()
+        self.setupFixturesTable()
     
 
     def showCurrentDifficulty(self, button, team_index):
@@ -37,7 +43,6 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
 
     def changeTeamDifficulty(self, button, team_index):
         # called when button pressed
-        print("C", button.objectName(), team_index)
 
         #changing difficulty
         new_difficulty = self.fpl_tool.teams.getTeamById(team_index).getDifficulty() + 1
@@ -50,21 +55,7 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
 
 
     def setupChangeTeamsDifficulty(self):
-        # # adds onlick events to every team button
-
-        # print(len(design.QtWidgets.QPushButton.findChildren(self, design.QtWidgets.QPushButton)))
-        
-        # for i in range (1, 21):
-        #     for team_button in design.QtWidgets.QPushButton.findChildren(self, design.QtWidgets.QPushButton):
-        #     #loops through every button
-        #         #checks name of a button and applies correct onlick function
-        #         button_name = "difficulty_button_" + str(i)
-        #         #print("STRING", button_name, team_button.objectName())
-        #         if team_button.objectName() == button_name:
-        #             print("TT", team_button.objectName(), i)
-        #             team_button.clicked.connect(lambda: self.ChangeTeamDifficulty(team_button, i))
-        
-       
+        # adds onlick events to every team button
         self.difficulty_button_1.clicked.connect(lambda: self.changeTeamDifficulty(self.difficulty_button_1, 1))
         self.difficulty_button_2.clicked.connect(lambda: self.changeTeamDifficulty(self.difficulty_button_2, 2))
         self.difficulty_button_3.clicked.connect(lambda: self.changeTeamDifficulty(self.difficulty_button_3, 3))
@@ -100,8 +91,8 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
         self.showCurrentDifficulty(self.difficulty_button_6, 6)
         self.showCurrentDifficulty(self.difficulty_button_7, 7)
         self.showCurrentDifficulty(self.difficulty_button_8, 8)
-        self.showCurrentDifficulty(self.difficulty_button_9, 9)
-        self.showCurrentDifficulty(self.difficulty_button_10, 10)
+        self.showCurrentDifficulty(self.difficulty_button_9, 9) # leicester
+        self.showCurrentDifficulty(self.difficulty_button_10, 10) # leeds
 
         self.showCurrentDifficulty(self.difficulty_button_11, 11)
         self.showCurrentDifficulty(self.difficulty_button_12, 12)
@@ -116,95 +107,110 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
         self.showCurrentDifficulty(self.difficulty_button_20, 20)
 
 
-    def setupHoverMenu(self):
-        list_of_menu = [self.Planner, self.TeamDifficulty, self.Fixtures, self.Quit]
+    def setupHoverButtons(self):
+        list_of_buttons = [self.Planner, self.TeamDifficulty, self.Fixtures, self.Account, self.Quit, self.change_team_id_button, self.light_mode_button, self.dark_mode_button, self.add_player]
 
-        for menu_button in list_of_menu:
-            menu_button.setStyleSheet("QPushButton::hover"
+        for button in list_of_buttons:
+            button.setStyleSheet("QPushButton::hover"
             "{"
-                "background-color : purple;"
+                "background-color : "+ self.config.hover_menu_color +";"
             "}")
 
+    def getCellText(self, opponents, i):
+        opponent_team_name = ""
+        number_of_fixtures = 0
+        for opponent in opponents[i - 1]:
+            if number_of_fixtures > 0:
+                opponent_team_name += "+"
+
+            opponent_team_name += self.fpl_tool.teams.getTeamById(opponent[0]).getAbb()
+            opponent_team_name = opponent_team_name.upper()
+            if opponent[1] == "H":
+                opponent_team_name += "(H)"
+            else:
+                opponent_team_name += "(A)"
+
+            number_of_fixtures += 1
+
+        if len(opponents[i - 1]) == 0:
+            opponent_team_name = "Blank"
+
+        return opponent_team_name
 
     def addFixturesRowToTable(self, table, opponents, table_row):
         current_gameweek = self.fpl_tool.current_gameweek
 
-        difficulty = 0
-
         # gets opponents and information H/A
         for i in range (current_gameweek, 39):
-            # setting text
-            
-            opponent_team_name = ""
+            # creating button
+            button = TableCell.TableCell()
+
+            difficulty = 0
+
+            # creating text
+            opponent_team_name = self.getCellText(opponents, i)
+
+            # number of fixtures and difficulty if double gameweek
             number_of_fixtures = 0
             for opponent in opponents[i - 1]:
                 if number_of_fixtures > 0:
-                    opponent_team_name += "+"
                     difficulty = -1
-
-                opponent_team_name += self.fpl_tool.teams.getTeamById(opponent[0]).getAbb()
-                opponent_team_name = opponent_team_name.upper()
-                if opponent[1] == "H":
-                    opponent_team_name += "(H)"
-                else:
-                    opponent_team_name += "(A)"
-
                 number_of_fixtures += 1
 
-            if len(opponents[i - 1]) == 0:
-                opponent_team_name = "Blank"
 
-            item = design.QtWidgets.QTableWidgetItem(opponent_team_name)
-            item.setTextAlignment(design.QtCore.Qt.AlignCenter) # change the alignment
-            table.setItem(table_row - 1, i - current_gameweek + 1, item)
+            # change text
+            button.setText(opponent_team_name)
 
             # changing color of a text
-            table.item(table_row - 1, i - current_gameweek + 1).setForeground(design.QtGui.QColor(255, 255, 255))
+            #C button.setStyleSheet(button.styleSheet() + "color: " + self.config.font_color_string + ";\n")
+            button.setFontColor(self.config.font_color_string)
 
             #changing background color of fixture
             if len(opponents[i - 1]) == 1:
-                difficulty = self.fpl_tool.teams.getTeamById(opponent[0]).getDifficulty()
+                difficulty = self.fpl_tool.teams.getTeamById(opponents[i - 1][0][0]).getDifficulty()
             
-            if difficulty == -1:
-                table.item(table_row - 1, i - current_gameweek + 1).setBackground(design.QtGui.QColor(233, 233, 0))
-                table.item(table_row - 1, i - current_gameweek + 1).setForeground(design.QtGui.QColor(0, 0, 0))
-            if difficulty == 0:
-                table.item(table_row - 1, i - current_gameweek + 1).setBackground(design.QtGui.QColor(10, 10, 10))
-            if difficulty == 1:
-                table.item(table_row - 1, i - current_gameweek + 1).setBackground(design.QtGui.QColor(0, 49, 29))
-            if difficulty == 2:
-                table.item(table_row - 1, i - current_gameweek + 1).setBackground(design.QtGui.QColor(0, 99, 49))
-            if difficulty == 3:
-                table.item(table_row - 1, i - current_gameweek + 1).setBackground(design.QtGui.QColor(91, 91, 91))
-            if difficulty == 4:
-                table.item(table_row - 1, i - current_gameweek + 1).setBackground(design.QtGui.QColor(100, 9, 32))
-            if difficulty == 5:
-                table.item(table_row - 1, i - current_gameweek + 1).setBackground(design.QtGui.QColor(50, 3, 18))
+            button.setDifficulty(difficulty)
+            button.changeBackground(self.config) # based on difficulty
 
-            # not selectable
-            table.item(table_row - 1, i - current_gameweek + 1).setFlags(design.QtCore.Qt.NoItemFlags)
-                
+            # when clicked
+            print(button.text())
+            button.clicked.connect(lambda: self.changeCellVisibility(button))
+
+            # updating style
+            button.updateStyleSheet()
+
+            # settling the button down
+            self.my_players_table.setCellWidget(table_row - 1, i - current_gameweek + 1, button)
 
 
-    def colorPlayer(self, row, column, player):
-        position = player.getPosition() 
+    def changeCellVisibility(self, button):
+        new_button = self.sender()
+        new_button.changeActivity(self.config)
+        new_button.updateStyleSheet()
+
+
+    def colorPlayer(self, row, column, player, table):
+        position = player.getPosition()
+
+        print("RC", row, column)
 
         if position == "Goalkeeper":
-            self.my_players_table.item(row, column).setBackground(design.QtGui.QColor(92, 100, 0))
+            table.item(row, column).setBackground(self.config.goalkeeper_color)
         if position == "Defender":
-            self.my_players_table.item(row, column).setBackground(design.QtGui.QColor(0, 100, 53))
+            table.item(row, column).setBackground(self.config.defender_color)
         if position == "Midfielder":
-            self.my_players_table.item(row, column).setBackground(design.QtGui.QColor(2, 94, 100))
+            table.item(row, column).setBackground(self.config.midfielder_color)
         if position == "Forward":
-            self.my_players_table.item(row, column).setBackground(design.QtGui.QColor(91, 0, 32))
+            table.item(row, column).setBackground(self.config.forward_color)
 
-        self.my_players_table.item(row, column).setForeground(design.QtGui.QColor(255, 255, 255))
+        # text color
+        self.my_players_table.item(row, column).setForeground(self.config.font_color)
 
 
     def addPlayerToTable(self, player, table_id):
         # adding his name
         self.my_players_table.setItem(table_id - 1, 0, design.QtWidgets.QTableWidgetItem(player.name))
-        self.colorPlayer(table_id - 1, 0, player)
+        self.colorPlayer(table_id - 1, 0, player, self.my_players_table)
 
         #adding fixtures
         current_gameweek = self.fpl_tool.current_gameweek
@@ -218,6 +224,7 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
         teams = self.fpl_tool.teams.getTeams()
 
         table_row = 0
+        self.frozen_fixtures.setRowCount(0)
         # add rows
         for team in teams:
             row_count = self.frozen_fixtures.rowCount()
@@ -226,6 +233,66 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
         for team in teams:
             self.frozen_fixtures.setItem(table_row, 0, design.QtWidgets.QTableWidgetItem(team.getName()))
             table_row += 1
+
+
+    def setupFrozenMyPlayers(self):
+        players = self.fpl_tool.players_array
+
+        table_row = 0
+        self.frozen_my_players.setRowCount(0)
+
+        # add rows
+        for player in players:
+            row_count = self.frozen_my_players.rowCount()
+            self.frozen_my_players.setRowCount(row_count + 1)
+
+        # adding goalkeepers
+        number_of_goalkeepers = 0
+        for player in self.fpl_tool.players_array:
+            if player.position == "Goalkeeper":
+                number_of_goalkeepers += 1
+                self.frozen_my_players.setItem(table_row, 0, design.QtWidgets.QTableWidgetItem(player.getName()))
+                self.frozen_my_players.setVerticalHeaderItem(table_row, design.QtWidgets.QTableWidgetItem("G" + str(number_of_goalkeepers)))
+                self.colorPlayer(table_row, 0, player, self.frozen_my_players)
+                self.frozen_my_players.item(table_row, 0).setFlags(design.QtCore.Qt.NoItemFlags)
+                self.frozen_my_players.item(table_row, 0).setForeground(self.config.font_color)
+                table_row += 1
+
+        # adding defenders
+        number_of_defenders = 0
+        for player in self.fpl_tool.players_array:
+            if player.position == "Defender":
+                number_of_defenders += 1
+                self.frozen_my_players.setItem(table_row, 0, design.QtWidgets.QTableWidgetItem(player.getName()))
+                self.frozen_my_players.setVerticalHeaderItem(table_row, design.QtWidgets.QTableWidgetItem("D" + str(number_of_defenders)))
+                self.colorPlayer(table_row, 0, player, self.frozen_my_players)
+                self.frozen_my_players.item(table_row, 0).setFlags(design.QtCore.Qt.NoItemFlags)
+                self.frozen_my_players.item(table_row, 0).setForeground(self.config.font_color)
+                table_row += 1
+
+        # adding midfielders
+        number_of_midfielders = 0
+        for player in self.fpl_tool.players_array:
+            if player.position == "Midfielder":
+                number_of_midfielders += 1
+                self.frozen_my_players.setItem(table_row, 0, design.QtWidgets.QTableWidgetItem(player.getName()))
+                self.frozen_my_players.setVerticalHeaderItem(table_row, design.QtWidgets.QTableWidgetItem("M" + str(number_of_midfielders)))
+                self.colorPlayer(table_row, 0, player, self.frozen_my_players)
+                self.frozen_my_players.item(table_row, 0).setFlags(design.QtCore.Qt.NoItemFlags)
+                self.frozen_my_players.item(table_row, 0).setForeground(self.config.font_color)
+                table_row += 1
+
+        # adding forwards
+        number_of_forwards = 0
+        for player in self.fpl_tool.players_array:
+            if player.position == "Forward":
+                number_of_forwards += 1
+                self.frozen_my_players.setItem(table_row, 0, design.QtWidgets.QTableWidgetItem(player.getName()))
+                self.frozen_my_players.setVerticalHeaderItem(table_row, design.QtWidgets.QTableWidgetItem("F" + str(number_of_forwards)))
+                self.colorPlayer(table_row, 0, player, self.frozen_my_players)
+                self.frozen_my_players.item(table_row, 0).setFlags(design.QtCore.Qt.NoItemFlags)
+                self.frozen_my_players.item(table_row, 0).setForeground(self.config.font_color)
+                table_row += 1
 
 
     def addColumnPT(self, gameweek_number):
@@ -252,6 +319,11 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
         # self.fixtures_table.setVerticalHeaderItem(row_count, design.QtWidgets.QTableWidgetItem(team_name))
 
 
+    def addRowPT(self):
+        row_count = self.my_players_table.rowCount()
+        self.my_players_table.setRowCount(row_count + 1)
+
+
     def addTeamToTable(self, table_row, team):
         self.fixtures_table.setItem(table_row - 1, 0, design.QtWidgets.QTableWidgetItem(team.getName()))
 
@@ -262,9 +334,11 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
     def setupFixturesTable(self):
         teams = self.fpl_tool.teams
 
+        self.fixtures_table.setColumnCount(1)
         for i in range (self.fpl_tool.current_gameweek, 39):
             self.addColumnFT(i)
 
+        self.fixtures_table.setRowCount(0)
         for team in teams.getTeams():
             #print(team.getName())
             self.addRowFT(team.getName())
@@ -278,36 +352,51 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
 
 
     def updateMyPlayersTable(self):
+        self.my_players_table.setColumnCount(1)
+
+        # adding columns
         for i in range (self.fpl_tool.current_gameweek, 39):
             self.addColumnPT(i)
 
+        self.my_players_table.setRowCount(0)
+        # adding rows for players
+        for player in self.fpl_tool.players_array:
+            self.addRowPT()
+
+        print(self.fpl_tool.players_array)
+
         # adding players in correct order
         table_row = 1
-        # add goalkeepers
+        # adding goalkeepers
         for player in self.fpl_tool.players_array:
             if player.position == "Goalkeeper":
                 self.addPlayerToTable(player, table_row)
                 table_row += 1
 
-        # add goalkeepers
+        # adding defenders
         for player in self.fpl_tool.players_array:
             if player.position == "Defender":
                 self.addPlayerToTable(player, table_row)
                 table_row += 1
 
-        # add goalkeepers
+        # adding midfielders
         for player in self.fpl_tool.players_array:
             if player.position == "Midfielder":
                 self.addPlayerToTable(player, table_row)
                 table_row += 1
 
-        # add goalkeepers
+        # adding forwards
         for player in self.fpl_tool.players_array:
             if player.position == "Forward":
                 self.addPlayerToTable(player, table_row)
                 table_row += 1
 
     
+    def setupSlider(self):
+        self.gameweeks_slider.setMinimum(0)
+        self.gameweeks_slider.setMaximum(38 - self.fpl_tool.current_gameweek)
+
+
     def quit(self):
         # terminates the PyQt
         design.QtWidgets.QApplication.quit()
@@ -317,31 +406,107 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
 
 
     def setupSearchBox(self):
-        names = self.fpl_tool.players.getPlayersNames()
-        completer = design.QtWidgets.QCompleter(names)
+        full_names = []
+        for player in self.fpl_tool.players.getPlayers():
+            team = self.fpl_tool.teams.getTeamById(player.getTeamId())
+            full_names.append(player.createCompleterString(team.getAbb()))
+
+        # completer content
+        completer = design.QtWidgets.QCompleter(full_names)
+
+        #case sensitivity
+        completer.setCaseSensitivity(design.QtCore.Qt.CaseInsensitive)
+
+        # checks if string contains the pattern
+        completer.setFilterMode(design.QtCore.Qt.MatchContains)
+
         self.search_box.setCompleter(completer)
+        
+
+    def changeMode(self, new_mode):
+        if new_mode == "light":
+            self.config.changeToDark()
+        elif new_mode == "dark":
+            self.config.changeToLight()
+        self.updateEverything()
+
+
+    def setupStyle(self):
+        self.centralwidget.setStyleSheet(
+        "QWidget#centralwidget {\n"
+        "     background-image: url(\"C://Users//Franex//Desktop//fpl_tool//pics//background_premier_league.png\")\n"
+        "}\n"
+        "\n"
+        "\n"
+        "QWidget QPushButton{ \n"
+        "    background-color: " + self.config.button_background_color + ";\n"
+        "    border-radius:10px;\n"
+        "}\n"
+        "\n"
+        "QWidget {\n"
+        "    background-color: transparent;\n"
+        "}\n"
+        "\n"
+        ""
+        )
+
+
+    def addConceptPlayer(self):
+        player_name = self.search_box.text()
+        print(player_name)
+        player = self.fpl_tool.players.getPlayerByCompleterString(player_name)
+
+        self.fpl_tool.players_array.append(player)
+
+        self.updateEverything()
 
 
     def setupOnclicks(self):
+        # menu
         self.Planner.clicked.connect(lambda: self.changeActivePage(self.planner_page))
         self.TeamDifficulty.clicked.connect(lambda: self.changeActivePage(self.team_difficulty_page))
         self.Fixtures.clicked.connect(lambda: self.changeActivePage(self.fixtures_page))
+        self.Account.clicked.connect(lambda: self.changeActivePage(self.account_page))
         self.Quit.clicked.connect(lambda: self.quit())
+
+        # settings
+        self.light_mode_button.clicked.connect(lambda: self.changeMode("light"))
+        self.dark_mode_button.clicked.connect(lambda: self.changeMode("dark"))
+
+        # add player (planner table)
+        self.add_player.clicked.connect(lambda: self.addConceptPlayer())
+
+
+    def updateEverything(self):
+        self.showDifficulties()
+
+        self.setupChangeTeamsDifficulty()
+
+        self.setupHoverButtons()
+
+        self.updateMyPlayersTable()
+
+        self.setupFixturesTable()
+
+        self.setupFrozenFixtures()
+
+        self.setupFrozenMyPlayers()
 
 
     def setupEvents(self):
 
         self.setupUi(self)
 
-        # onlick functions for menu
+        self.setupStyle()
 
+        # onlick functions for menu
         self.setupOnclicks()
 
         self.showDifficulties()
 
         self.setupChangeTeamsDifficulty()
 
-        self.setupHoverMenu()
+        self.setupHoverButtons()
 
         self.updateMyPlayersTable()
 
@@ -351,5 +516,10 @@ class Ui_MainWindowEvents(design.Ui_MainWindow):
 
         self.setupFrozenFixtures()
 
+        self.setupFrozenMyPlayers()
 
-        #background-image: url("C://Users//Franex//Desktop//fpl_tool//pics//background_premier_league.png")
+        self.setupSlider()
+
+
+
+        # background-image: url("C://Users//Franex//Desktop//fpl_tool//pics//background_premier_league.png")

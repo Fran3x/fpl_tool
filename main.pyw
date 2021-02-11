@@ -6,10 +6,6 @@ import sys
 import events
 import tool
 
-# "QMainWindow#MainWindow {\n"
-#         "     background-image: url(\"C://Users//Franex//Desktop//fpl_tool//pics//background_premier_league.png\")\n"
-#         "}\n"
-
 
 #cd C:\Users\Franex\AppData\Local\Programs\Python\Python38-32\Lib\site-packages\PySide2\fpl_tool && pyuic5 -x design.ui -o design.py
 #cd C:\Users\Franex\Desktop\fpl_tool && pyuic5 -x design.ui -o design.py
