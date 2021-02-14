@@ -7,10 +7,12 @@ class TableCell(QtWidgets.QPushButton):
         self.border_radius = 0
         self.background_color = "#000000"
         self.font_color = "#ffffff"
+        #self.team = opponent
         self.difficulty = 0
         self.active = True
 
         self.updateStyleSheet()
+
 
     def updateStyleSheet(self):
         self.setStyleSheet(
@@ -19,16 +21,25 @@ class TableCell(QtWidgets.QPushButton):
         "color: " + self.font_color + ";\n"
         )
         
+        
     def setFontColor(self, new_color):
         self.font_color = new_color
+
 
     def setBackgroundColor(self, new_color):
         self.background_color = new_color
 
+
     def setDifficulty(self, new_difficulty):
         self.difficulty = new_difficulty
 
+
+    def updateDifficulty(self):
+        #self.difficulty = team.getDifficulty()
+        pass
+
     def changeBackground(self, config):
+        self.updateDifficulty()
         if self.difficulty == -1:
             self.setBackgroundColor(config.double_gameweek_color_string)
             self.setFontColor(config.black_string)
@@ -54,8 +65,35 @@ class TableCell(QtWidgets.QPushButton):
     
     def changeActivity(self, config):
         if self.active:
-            self.active = False
-            self.setBackgroundColor(config.inactive_color_string)
+            self.changeToInactive(config)
         else:
             self.active = True
             self.changeBackground(config)
+
+
+    def changePlayerBackground(self, position, config):
+        if position == "Goalkeeper":
+            self.setBackgroundColor(config.goalkeeper_color_string)
+        if position == "Defender":
+            self.setBackgroundColor(config.defender_color_string)
+        if position == "Midfielder":
+            self.setBackgroundColor(config.midfielder_color_string)
+        if position == "Forward":
+            self.setBackgroundColor(config.forward_color_string)
+
+
+    def changeToActive(self, config):
+        self.active = True
+        self.changeBackground(config)
+        self.updateStyleSheet()
+
+
+    def changeToInactive(self, config):
+        self.active = False
+        self.setBackgroundColor(config.inactive_color_string)
+        self.setFontColor(config.black_string)
+        self.updateStyleSheet()
+
+
+    def isActive(self):
+        return self.active

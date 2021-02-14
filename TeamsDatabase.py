@@ -14,7 +14,7 @@ class TeamsDatabase:
     def updateDatabase(self):
         self.teams.append(Team.Team(1, "Arsenal", "ars", self.fixtures_array[0]))
         self.teams.append(Team.Team(2, "Aston Villa", "avl", self.fixtures_array[1]))
-        self.teams.append(Team.Team(3, "Brighton", "bri", self.fixtures_array[2]))
+        self.teams.append(Team.Team(3, "Brighton", "bha", self.fixtures_array[2]))
         self.teams.append(Team.Team(4, "Burnley", "bur", self.fixtures_array[3]))
         self.teams.append(Team.Team(5, "Chelsea", "che", self.fixtures_array[4]))
         self.teams.append(Team.Team(6, "Crystal Palace", "cry", self.fixtures_array[5]))

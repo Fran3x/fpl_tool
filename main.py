@@ -6,7 +6,7 @@ import sys
 import events
 import tool
 
-# "QMainWindow#MainWindow {\n"
+# "QWidget#centralwidget {\n"
 #         "     background-image: url(\"C://Users//Franex//Desktop//fpl_tool//pics//background_premier_league.png\")\n"
 #         "}\n"
 
