@@ -10,6 +10,7 @@ import TeamsDatabase
 
 class Tool:
     def __init__(self):
+        self.team_id = 8487 # fixed for now
 
         self.teams = TeamsDatabase.TeamsDatabase()
 
@@ -41,10 +42,11 @@ class Tool:
 
 
     def getPlayersIds(self):
+        self.picks_array = []
         # https://fantasy.premierleague.com/api/entry/8487/event/21/picks/
         # gets my players for current gameweek
         if self.current_gameweek > 0:
-            with urllib.request.urlopen("https://fantasy.premierleague.com/api/entry/8487/event/"+ str(self.current_gameweek) +"/picks/") as url_picks:
+            with urllib.request.urlopen("https://fantasy.premierleague.com/api/entry/" + str(self.team_id) + "/event/"+ str(self.current_gameweek) +"/picks/") as url_picks:
                 picks = json.loads(url_picks.read())['picks']
                 for pick in picks:
                     #print("P", pick)
@@ -53,6 +55,7 @@ class Tool:
 
 
     def getPlayersNames(self):
+        self.players_array = []
         # gets name of my picked players
         for pick_id in self.picks_array:
             self.players_array.append(self.players.getPlayerById(pick_id))
@@ -90,4 +93,6 @@ class Tool:
         return next_gameweek
 
 
+    def setTeamId(self, new_team_id):
+        self.team_id = new_team_id
 

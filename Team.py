@@ -5,7 +5,7 @@ class Team:
         self.name = team_name
         self.abb = team_abbrevation
         self.fixtures = team_fixtures
-        self.difficulty = 3
+        self.difficulty = 3 # default difficulty
 
     def setDifficulty(self, new_difficulty):
         self.difficulty = new_difficulty

@@ -2,15 +2,17 @@
 from PyQt5 import QtWidgets
 
 class TableCell(QtWidgets.QPushButton):
-    def __init__(self):
+    def __init__(self, opponents=None):
         super().__init__()
         self.border_radius = 0
         self.background_color = "#000000"
         self.font_color = "#ffffff"
-        #self.team = opponent
+        if opponents == None: # only for fixtures cell
+            self.opponents = None
+        else:
+            self.opponents = opponents
         self.difficulty = 0
         self.active = True
-
         self.updateStyleSheet()
 
 
@@ -20,8 +22,8 @@ class TableCell(QtWidgets.QPushButton):
         "background-color: " + self.background_color + ";\n"
         "color: " + self.font_color + ";\n"
         )
-        
-        
+
+
     def setFontColor(self, new_color):
         self.font_color = new_color
 
@@ -34,12 +36,22 @@ class TableCell(QtWidgets.QPushButton):
         self.difficulty = new_difficulty
 
 
-    def updateDifficulty(self):
-        #self.difficulty = team.getDifficulty()
-        pass
+    def updateDifficulty(self, config, fpl_tool):
+        # updates difficulty of a cell and then adjusts color
+        #print("U")
+        if len(self.opponents) > 1:
+            self.difficulty = -1
+        elif len(self.opponents) == 0:
+            self.difficulty = 0
+        else:
+            self.difficulty = fpl_tool.teams.getTeamById(self.opponents[0][0]).getDifficulty()
+            #print(self.difficulty)
 
-    def changeBackground(self, config):
-        self.updateDifficulty()
+
+    def changeBackground(self, config, fpl_tool):
+        self.updateDifficulty(config, fpl_tool)
+        if self.active == False:
+            return
         if self.difficulty == -1:
             self.setBackgroundColor(config.double_gameweek_color_string)
             self.setFontColor(config.black_string)
@@ -61,14 +73,16 @@ class TableCell(QtWidgets.QPushButton):
         if self.difficulty == 5:
             self.setBackgroundColor(config.difficulty5_color_string)
             self.setFontColor(config.font_color_string)
+        # updates style
+        self.updateStyleSheet()
 
     
-    def changeActivity(self, config):
+    def changeActivity(self, config, fpl_tool):
         if self.active:
             self.changeToInactive(config)
         else:
             self.active = True
-            self.changeBackground(config)
+            self.changeBackground(config, fpl_tool)
 
 
     def changePlayerBackground(self, position, config):
@@ -82,9 +96,9 @@ class TableCell(QtWidgets.QPushButton):
             self.setBackgroundColor(config.forward_color_string)
 
 
-    def changeToActive(self, config):
+    def changeToActive(self, config, fpl_tool):
         self.active = True
-        self.changeBackground(config)
+        self.changeBackground(config, fpl_tool)
         self.updateStyleSheet()
 
 
